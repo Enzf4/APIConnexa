@@ -1,0 +1,481 @@
+{
+  "info": {
+    "name": "Connexa API",
+    "description": "Collection para testar a API da plataforma Connexa",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Autenticação",
+      "item": [
+        {
+          "name": "Cadastrar Usuário",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João Silva\",\n  \"email\": \"joao.silva@univali.br\",\n  \"curso\": \"Ciência da Computação\",\n  \"periodo\": \"5º\",\n  \"senha\": \"MinhaSenh@123\",\n  \"interesses\": \"Programação, IA, Web Development\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/usuarios/cadastro",
+              "host": ["{{base_url}}"],
+              "path": ["api", "usuarios", "cadastro"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"joao.silva@univali.br\",\n  \"senha\": \"MinhaSenh@123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Verificar Token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/auth/verify-token",
+              "host": ["{{base_url}}"],
+              "path": ["api", "auth", "verify-token"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Usuários",
+      "item": [
+        {
+          "name": "Obter Perfil",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/usuarios/perfil",
+              "host": ["{{base_url}}"],
+              "path": ["api", "usuarios", "perfil"]
+            }
+          }
+        },
+        {
+          "name": "Atualizar Perfil",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "nome",
+                  "value": "João Silva Santos",
+                  "type": "text"
+                },
+                {
+                  "key": "curso",
+                  "value": "Engenharia de Software",
+                  "type": "text"
+                },
+                {
+                  "key": "periodo",
+                  "value": "6º",
+                  "type": "text"
+                },
+                {
+                  "key": "interesses",
+                  "value": "Programação, IA, Web Development, Mobile",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/api/usuarios/perfil",
+              "host": ["{{base_url}}"],
+              "path": ["api", "usuarios", "perfil"]
+            }
+          }
+        },
+        {
+          "name": "Obter Grupos do Usuário",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/usuarios/grupos",
+              "host": ["{{base_url}}"],
+              "path": ["api", "usuarios", "grupos"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Grupos",
+      "item": [
+        {
+          "name": "Criar Grupo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Grupo de Estudo - Cálculo\",\n  \"materia\": \"Cálculo I\",\n  \"objetivo\": \"Estudar para a prova de Cálculo I que será na próxima semana\",\n  \"local\": \"presencial\",\n  \"limite_participantes\": 10\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/grupos",
+              "host": ["{{base_url}}"],
+              "path": ["api", "grupos"]
+            }
+          }
+        },
+        {
+          "name": "Buscar Grupos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/grupos/buscar?materia=Cálculo&local=presencial&pagina=1&limite=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "grupos", "buscar"],
+              "query": [
+                {
+                  "key": "materia",
+                  "value": "Cálculo"
+                },
+                {
+                  "key": "local",
+                  "value": "presencial"
+                },
+                {
+                  "key": "pagina",
+                  "value": "1"
+                },
+                {
+                  "key": "limite",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Obter Grupo por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/grupos/1",
+              "host": ["{{base_url}}"],
+              "path": ["api", "grupos", "1"]
+            }
+          }
+        },
+        {
+          "name": "Entrar em Grupo",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/grupos/1/entrar",
+              "host": ["{{base_url}}"],
+              "path": ["api", "grupos", "1", "entrar"]
+            }
+          }
+        },
+        {
+          "name": "Sair do Grupo",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/grupos/1/sair",
+              "host": ["{{base_url}}"],
+              "path": ["api", "grupos", "1", "sair"]
+            }
+          }
+        },
+        {
+          "name": "Obter Participantes",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/grupos/1/participantes",
+              "host": ["{{base_url}}"],
+              "path": ["api", "grupos", "1", "participantes"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mensagens",
+      "item": [
+        {
+          "name": "Obter Mensagens",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/grupos/1/mensagens?pagina=1&limite=50",
+              "host": ["{{base_url}}"],
+              "path": ["api", "grupos", "1", "mensagens"],
+              "query": [
+                {
+                  "key": "pagina",
+                  "value": "1"
+                },
+                {
+                  "key": "limite",
+                  "value": "50"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Enviar Mensagem",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"conteudo\": \"Olá pessoal! Vamos começar o estudo?\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/api/grupos/1/mensagens",
+              "host": ["{{base_url}}"],
+              "path": ["api", "grupos", "1", "mensagens"]
+            }
+          }
+        },
+        {
+          "name": "Obter Últimas Mensagens",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/grupos/1/mensagens/ultimas?limite=10",
+              "host": ["{{base_url}}"],
+              "path": ["api", "grupos", "1", "mensagens", "ultimas"],
+              "query": [
+                {
+                  "key": "limite",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Notificações",
+      "item": [
+        {
+          "name": "Obter Notificações",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/notificacoes?pagina=1&limite=20",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notificacoes"],
+              "query": [
+                {
+                  "key": "pagina",
+                  "value": "1"
+                },
+                {
+                  "key": "limite",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Marcar Notificação como Lida",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/notificacoes/1/lida",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notificacoes", "1", "lida"]
+            }
+          }
+        },
+        {
+          "name": "Marcar Todas como Lidas",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/notificacoes/marcar-todas-lidas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notificacoes", "marcar-todas-lidas"]
+            }
+          }
+        },
+        {
+          "name": "Obter Estatísticas",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/api/notificacoes/estatisticas",
+              "host": ["{{base_url}}"],
+              "path": ["api", "notificacoes", "estatisticas"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Sistema",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "Informações da API",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api",
+              "host": ["{{base_url}}"],
+              "path": ["api"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3001",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
