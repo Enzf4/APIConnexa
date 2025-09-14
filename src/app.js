@@ -91,7 +91,12 @@ app.use(
 );
 
 // Middleware de CORS (IMPORTANTE: aplicar ANTES das rotas)
-app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: true, // Permite QUALQUER origem
+    credentials: true,
+  })
+);
 
 // Middleware de compressão
 app.use(compression());
