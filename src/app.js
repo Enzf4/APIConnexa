@@ -17,14 +17,72 @@ const notificacoesRoutes = require("./routes/notificacoes");
 
 const app = express();
 
-// Configuração de CORS
+// ==========================================
+// CONFIGURAÇÃO DE CORS COMPLETA E SEGURA
+// ==========================================
+
+const allowedOrigins = [
+  // URLs de desenvolvimento
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "http://127.0.0.1:3000",
+  "http://localhost:5173", // Vite
+
+  // URLs de produção
+  "https://connexa-ebon.vercel.app", // Seu frontend na Vercel
+
+  // URL do .env (se definida)
+  process.env.FRONTEND_URL,
+].filter(Boolean); // Remove valores undefined/null
+
+// Adicionar URLs adicionais do .env se definidas
+if (process.env.ADDITIONAL_ORIGINS) {
+  const additionalUrls = process.env.ADDITIONAL_ORIGINS.split(",").map((url) =>
+    url.trim()
+  );
+  allowedOrigins.push(...additionalUrls);
+}
+
+console.log("🌐 CORS configurado para as seguintes origens:", allowedOrigins);
+
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || "http://localhost:3000",
+  origin: function (origin, callback) {
+    // Permitir requisições sem origin (mobile apps, Postman, etc)
+    if (!origin) {
+      console.log("📱 Requisição sem origin permitida");
+      return callback(null, true);
+    }
+
+    // Verificar se a origem está na lista permitida
+    if (allowedOrigins.includes(origin)) {
+      console.log(`✅ CORS permitido para: ${origin}`);
+      callback(null, true);
+    } else {
+      console.log(`❌ CORS bloqueado para: ${origin}`);
+      console.log(`📋 Origens permitidas:`, allowedOrigins);
+      callback(new Error(`Origem ${origin} não permitida pelo CORS`));
+    }
+  },
   credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: [
+    "Origin",
+    "X-Requested-With",
+    "Content-Type",
+    "Accept",
+    "Authorization",
+    "Cache-Control",
+    "X-Access-Token",
+  ],
+  exposedHeaders: ["Authorization", "X-Total-Count"],
   optionsSuccessStatus: 200,
+  maxAge: 86400, // Cache preflight por 24h
 };
 
-// Middlewares de segurança
+// ==========================================
+// MIDDLEWARES DE SEGURANÇA
+// ==========================================
+
 app.use(
   helmet({
     contentSecurityPolicy: false, // Simplificar para desenvolvimento
@@ -32,11 +90,28 @@ app.use(
   })
 );
 
-// Middleware de CORS
+// Middleware de CORS (IMPORTANTE: aplicar ANTES das rotas)
 app.use(cors(corsOptions));
 
 // Middleware de compressão
 app.use(compression());
+
+// ==========================================
+// MIDDLEWARE DE DEBUG CORS (opcional - remover em produção)
+// ==========================================
+
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") {
+    console.log(
+      `🔍 Preflight request de: ${req.headers.origin || "sem origin"}`
+    );
+  }
+  next();
+});
+
+// ==========================================
+// RATE LIMITING
+// ==========================================
 
 // Middleware de rate limiting
 const limiter = rateLimit({
@@ -46,6 +121,8 @@ const limiter = rateLimit({
     error: "Muitas requisições",
     message: "Muitas requisições deste IP, tente novamente em 1 minuto",
   },
+  standardHeaders: true, // Retorna rate limit info nos headers
+  legacyHeaders: false,
 });
 
 // Rate limiting específico para login
@@ -56,6 +133,7 @@ const loginLimiter = rateLimit({
     error: "Muitas tentativas de login",
     message: "Muitas tentativas de login, tente novamente em 15 minutos",
   },
+  skipSuccessfulRequests: true, // Não contar requests bem-sucedidos
 });
 
 // Rate limiting específico para reset de senha
@@ -73,6 +151,10 @@ app.use("/api/", limiter);
 app.use("/api/auth/login", loginLimiter);
 app.use("/api/auth/reset-password", resetPasswordLimiter);
 
+// ==========================================
+// MIDDLEWARES DE PARSING E ARQUIVOS
+// ==========================================
+
 // Middleware para parsing de JSON
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
@@ -80,14 +162,24 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 // Middleware para servir arquivos estáticos
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
+// ==========================================
+// MIDDLEWARE DE LOGGING
+// ==========================================
+
 // Middleware de logging básico
 app.use((req, res, next) => {
   const timestamp = new Date().toISOString();
   console.log(
-    `[${timestamp}] ${req.method} ${req.originalUrl} - IP: ${req.ip}`
+    `[${timestamp}] ${req.method} ${req.originalUrl} - IP: ${
+      req.ip
+    } - Origin: ${req.headers.origin || "N/A"}`
   );
   next();
 });
+
+// ==========================================
+// ROTAS DE SISTEMA
+// ==========================================
 
 // Rota de health check
 app.get("/health", (req, res) => {
@@ -96,6 +188,7 @@ app.get("/health", (req, res) => {
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     environment: process.env.NODE_ENV || "development",
+    corsOrigins: allowedOrigins.length,
   });
 });
 
@@ -113,8 +206,14 @@ app.get("/api", (req, res) => {
       notificacoes: "/api/notificacoes",
     },
     status: "active",
+    corsEnabled: true,
+    allowedOrigins: allowedOrigins.length,
   });
 });
+
+// ==========================================
+// ROTAS DA API
+// ==========================================
 
 // Rotas da API
 app.use("/api/auth", authRoutes);
@@ -122,11 +221,19 @@ app.use("/api/usuarios", usuariosRoutes);
 app.use("/api/grupos", gruposRoutes);
 app.use("/api/notificacoes", notificacoesRoutes);
 
+// ==========================================
+// MIDDLEWARE DE ERRO E 404
+// ==========================================
+
 // Middleware para rotas não encontradas
 app.use("*", notFound);
 
 // Middleware global de tratamento de erros
 app.use(errorHandler);
+
+// ==========================================
+// TRATAMENTO DE ERROS NÃO CAPTURADOS
+// ==========================================
 
 // Middleware para capturar erros não tratados
 process.on("uncaughtException", (error) => {
