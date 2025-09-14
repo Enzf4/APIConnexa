@@ -3,7 +3,7 @@ const { AVATARS_VALIDOS } = require("../utils/constants");
 
 // Validação de email institucional
 const validarEmailInstitucional = (email) => {
-  const dominiosValidos = ["@univali.br", "@edu.univali.br"];
+  const dominiosValidos = ["@alunos.unisanta.br", "@edu.alunos.unisanta.br"];
   return dominiosValidos.some((dominio) => email.endsWith(dominio));
 };
 
@@ -58,7 +58,7 @@ const schemas = {
       .messages({
         "string.email": "Email deve ter um formato válido",
         "email.institucional":
-          "Email deve ser institucional (@univali.br ou @edu.univali.br)",
+          "Email deve ser institucional (@alunos.unisanta.br ou @edu.alunos.unisanta.br)",
         "any.required": "Email é obrigatório",
       }),
     curso: Joi.string().min(2).max(100).required().messages({

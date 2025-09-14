@@ -26,26 +26,31 @@ API REST desenvolvida em Node.js para uma plataforma de grupos de estudo univers
 ## 🚀 Instalação e Execução
 
 ### Pré-requisitos
+
 - Node.js 18 ou superior
 - npm ou yarn
 
 ### 1. Clone o repositório
+
 ```bash
 git clone <url-do-repositorio>
 cd APIConnexa
 ```
 
 ### 2. Instale as dependências
+
 ```bash
 npm install
 ```
 
 ### 3. Configure as variáveis de ambiente
+
 ```bash
 cp env.example .env
 ```
 
 Edite o arquivo `.env` com suas configurações:
+
 ```env
 NODE_ENV=development
 PORT=3001
@@ -58,11 +63,13 @@ FRONTEND_URL=http://localhost:3000
 ```
 
 ### 4. Inicialize o banco de dados
+
 ```bash
 npm run init-db
 ```
 
 ### 5. Execute o servidor
+
 ```bash
 # Desenvolvimento (com nodemon)
 npm run dev
@@ -72,6 +79,7 @@ npm start
 ```
 
 ### 6. Teste a API
+
 Acesse `http://localhost:3001/health` para verificar se está funcionando.
 
 ## 📚 Documentação da API
@@ -159,19 +167,23 @@ src/
 ## 📊 Validações
 
 ### Email
-- Deve ser institucional (@univali.br ou @edu.univali.br)
+
+- Deve ser institucional (@alunos.unisanta.br ou @edu.alunos.unisanta.br)
 
 ### Senha
+
 - Mínimo 8 caracteres
 - Pelo menos: 1 minúscula, 1 maiúscula e 1 número
 
 ### Upload de Arquivos
+
 - Apenas imagens (JPG, PNG, GIF, WEBP)
 - Máximo 5MB
 
 ## 🚀 Deploy
 
 ### Variáveis de Ambiente para Produção
+
 ```env
 NODE_ENV=production
 PORT=3001
@@ -184,6 +196,7 @@ FRONTEND_URL=https://seu-frontend.com
 ```
 
 ### Comandos de Deploy
+
 ```bash
 # Instalar dependências
 npm install --production
@@ -198,13 +211,14 @@ npm start
 ## 🧪 Testando a API
 
 ### Com curl
+
 ```bash
 # Cadastrar usuário
 curl -X POST http://localhost:3001/api/usuarios/cadastro \
   -H "Content-Type: application/json" \
   -d '{
     "nome": "João Silva",
-    "email": "joao.silva@univali.br",
+    "email": "joao.silva@alunos.unisanta.br",
     "curso": "Ciência da Computação",
     "periodo": "5º",
     "senha": "MinhaSenh@123"
@@ -214,17 +228,19 @@ curl -X POST http://localhost:3001/api/usuarios/cadastro \
 curl -X POST http://localhost:3001/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
-    "email": "joao.silva@univali.br",
+    "email": "joao.silva@alunos.unisanta.br",
     "senha": "MinhaSenh@123"
   }'
 ```
 
 ### Com Postman
+
 Importe a collection disponível em `/docs/postman-collection.json`
 
 ## 🐛 Solução de Problemas
 
 ### Erro de Conexão com Banco
+
 ```bash
 # Verificar se o diretório existe
 mkdir -p src/database
@@ -234,11 +250,13 @@ npm run init-db
 ```
 
 ### Erro de Email
+
 - Verifique as credenciais no `.env`
 - Use senha de app do Gmail (não a senha normal)
 - Verifique se o 2FA está habilitado
 
 ### Erro de Upload
+
 ```bash
 # Criar diretório de uploads
 mkdir -p uploads/profile-pics
@@ -275,6 +293,7 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para de
 ## 📞 Suporte
 
 Para dúvidas ou problemas:
+
 - Abra uma issue no GitHub
 - Verifique a documentação da API
 - Consulte os logs do servidor

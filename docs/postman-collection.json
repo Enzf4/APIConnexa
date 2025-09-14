@@ -20,7 +20,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nome\": \"João Silva\",\n  \"email\": \"joao.silva@univali.br\",\n  \"curso\": \"Ciência da Computação\",\n  \"periodo\": \"5º\",\n  \"senha\": \"MinhaSenh@123\",\n  \"interesses\": \"Programação, IA, Web Development\"\n}"
+              "raw": "{\n  \"nome\": \"João Silva\",\n  \"email\": \"joao.silva@alunos.unisanta.br\",\n  \"curso\": \"Ciência da Computação\",\n  \"periodo\": \"5º\",\n  \"senha\": \"MinhaSenh@123\",\n  \"interesses\": \"Programação, IA, Web Development\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/usuarios/cadastro",
@@ -41,7 +41,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"joao.silva@univali.br\",\n  \"senha\": \"MinhaSenh@123\"\n}"
+              "raw": "{\n  \"email\": \"joao.silva@alunos.unisanta.br\",\n  \"senha\": \"MinhaSenh@123\"\n}"
             },
             "url": {
               "raw": "{{base_url}}/api/auth/login",
